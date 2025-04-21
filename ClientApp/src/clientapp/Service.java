@@ -20,9 +20,11 @@ public class Service implements Runnable {
 
     //FIELD 
     private Socket socket;
+    private BufferedReader received;
+    private DataOutputStream send;
     private String name;
     private Thread t;
-    
+
     //CONSTRUCTOR
     public Service(String _serverAddress, int _serverPort) {
         try {
@@ -53,6 +55,22 @@ public class Service implements Runnable {
         }
     }
 
+    public BufferedReader getReceived() {
+        return received;
+    }
+
+    public void setReceived(BufferedReader received) {
+        this.received = received;
+    }
+
+    public DataOutputStream getSend() {
+        return send;
+    }
+
+    public void setSend(DataOutputStream send) {
+        this.send = send;
+    }
+
     //MULTITHREADING
     public void start() {
         if (this.t == null) {
@@ -60,38 +78,37 @@ public class Service implements Runnable {
             t.start();
         }
     }
-    
+
     @Override
     public void run() {
         System.out.println("CONNECTED TO SERVER");
-        while (true) {
+        this.ReceivedFromServer(); 
             try {
-                String message = this.ReceivedFromServer();
-                System.out.println(message);
-            }
-            catch (Exception ex)
-            {
+                while (true) {
+                    String message = received.readLine();
+                    System.out.println(message);
+                }
+            } catch (Exception ex) {
                 System.out.println("WARNING: \n" + ex);
             }
-        }
+        
     }
 
     //METHOD
     public void SendToServer(String _message) {
         try {
-            DataOutputStream send = new DataOutputStream(this.getSocket().getOutputStream());
+            setSend(new DataOutputStream(this.getSocket().getOutputStream()));
             send.writeBytes(_message + "\n");
         } catch (Exception ex) {
             System.out.println("WARNING: \n" + ex);
         }
     }
 
-    public String ReceivedFromServer() {
+    public void ReceivedFromServer() {
         try {
-            BufferedReader received = new BufferedReader(new InputStreamReader(this.getSocket().getInputStream()));
-            return received.readLine();
+            setReceived(new BufferedReader(new InputStreamReader(this.getSocket().getInputStream())));
         } catch (Exception ex) {
-            return ("WARNING: \n" + ex);
+            System.out.println("WARNING: \n" + ex);
         }
 
     }

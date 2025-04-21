@@ -25,10 +25,9 @@ public class ClientApp {
         String name = scan.nextLine();
 
         service.setName(name);
-        
+        String message = "";
         while (true) {
-            String message = scan.nextLine();
-
+            message = scan.nextLine();
             service.SendToServer(service.getName() + ": " + message);
         }
 

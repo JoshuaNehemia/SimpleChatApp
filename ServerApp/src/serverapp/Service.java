@@ -45,6 +45,11 @@ public class Service implements Runnable {
             }
         }
     }
+    
+    public void RemoveClient(SocketHandler _client)
+    {
+        clients.remove(_client);
+    }
 
     //MULTITHREADING   
     public void start() {
@@ -57,8 +62,7 @@ public class Service implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("SERVER RUNNING");
-        while (true) {
+        System.out.println("SERVER RUNNING"); {
             while (true) {
                 try {
                     incomingClientSocket = serverSocket.accept();

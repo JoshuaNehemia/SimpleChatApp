@@ -76,16 +76,16 @@ public class SocketHandler extends Thread {
     //METHOD
     @Override
     public void run() {
-        while (true) {
-            try {
-                System.out.println("READY TO RECEIVED FROM CLIENT");
-                this.setReceived(new BufferedReader(new InputStreamReader(this.getSocket().getInputStream())));
+        System.out.println("READY TO RECEIVED FROM CLIENT");
+        this.ReceivedFromClient();
+        try {
+            while (true) {
                 String message = this.getReceived().readLine();
                 System.out.println("RECEIVED:\n" + message + "\nFROM:\n" + this.getSocket());
                 this.parent.Broadcast(message, this);
-            } catch (Exception ex) {
-                System.out.println("WARNING: \n" + ex);
             }
+        } catch (Exception ex) {
+            System.out.println("WARNING: \n" + ex);
         }
     }
 
@@ -94,6 +94,14 @@ public class SocketHandler extends Thread {
             this.setSend(new DataOutputStream(this.getSocket().getOutputStream()));
             this.getSend().writeBytes(_message + "\n");
             System.out.println("SENT:\n" + _message + "\nTO:\n" + this.getSocket());
+        } catch (Exception ex) {
+            System.out.println("WARNING: \n" + ex);
+        }
+    }
+
+    public void ReceivedFromClient() {
+        try {
+            this.setReceived(new BufferedReader(new InputStreamReader(this.getSocket().getInputStream())));
         } catch (Exception ex) {
             System.out.println("WARNING: \n" + ex);
         }
